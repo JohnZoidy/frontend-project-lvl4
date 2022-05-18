@@ -17,13 +17,14 @@
     "type": "git",
     "url": "git+https://github.com/JohnZoidy/frontend-project-lvl4.git"
   },
-    "engines": {
+  "engines": {
     "node": "16.x"
   },
   "author": "JohnZoidy&Hexlet",
   "license": "ISC",
   "homepage": "",
   "dependencies": {
+    "axios": "^0.27.2",
     "bootstrap": "^5.1.3",
     "core-js": "^3.21.1",
     "debug": "^4.3.3",
@@ -35,6 +36,7 @@
     "fastify-sensible": "^3.1.2",
     "fastify-socket.io": "^3.0.0",
     "fastify-static": "^4.5.0",
+    "formik": "^2.2.9",
     "http-errors": "^2.0.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
@@ -42,10 +44,14 @@
     "point-of-view": "^5.1.0",
     "popper.js": "^1.16.1",
     "pug": "^3.0.2",
-    "react": "^17.0.2",
+    "react": "^18.1.0",
+    "react-bootstrap": "^2.4.0",
+    "react-dom": "^18.1.0",
+    "react-router-dom": "^5.3.1",
     "regenerator-runtime": "^0.13.9",
     "socket.io": "^4.5.0",
-    "socket.io-client": "^4.5.0"
+    "socket.io-client": "^4.5.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.3",
