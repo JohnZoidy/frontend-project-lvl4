@@ -1,1 +1,7 @@
 @import '~bootstrap/scss/bootstrap';
+
+.card {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}

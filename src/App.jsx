@@ -1,4 +1,5 @@
 import React from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
 
 import {
   BrowserRouter as Router,
@@ -7,13 +8,15 @@ import {
   Redirect,
   useLocation,
 } from 'react-router-dom';
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Container } from 'react-bootstrap';
+// Импортируем нужные действия slices
+
 import LoginPage from './components/LoginPage.jsx';
 import Page404 from './components/Page404.jsx';
 import ChatPage from './components/ChatPage.jsx';
 import SignUpPage from './components/SignUpPage.jsx';
 import AuthContext from './contexts/AuthContext.jsx';
-import useAuth from './hooks/AuthHook.jsx';
+// import useAuth from './hooks/AuthHook.jsx';
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -31,36 +34,39 @@ const AuthProvider = ({ children }) => {
   );
 };
 const PrivateRoute = ({ children }) => {
-  const auth = useAuth();
+  // const auth = useAuth();
   const location = useLocation();
-
   return (
-    auth.loggedIn ? children : <Redirect to={{ pathname: '/login', state: { from: location } }} />
+    localStorage.getItem('userId') ? children : <Redirect to={{ pathname: '/login', state: { from: location } }} />
   );
 };
 
 const App = () => (
   <AuthProvider>
     <Router>
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand>Slack on minimals</Navbar.Brand>
-      </Navbar>
-      <Switch>
-        <Route exact path="/">
-          <PrivateRoute>
-            <ChatPage />
-          </PrivateRoute>
-        </Route>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route path="/signup">
-          <SignUpPage />
-        </Route>
-        <Route path="*">
-          <Page404 />
-        </Route>
-      </Switch>
+      <div className="d-flex flex-column h-100">
+        <Navbar className="shadow-sm" bg="white" expand="lg">
+          <Container>
+            <Navbar.Brand href="/">Slack on minimals</Navbar.Brand>
+          </Container>
+        </Navbar>
+        <Switch>
+          <Route exact path="/">
+            <PrivateRoute>
+              <ChatPage />
+            </PrivateRoute>
+          </Route>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/signup">
+            <SignUpPage />
+          </Route>
+          <Route path="*">
+            <Page404 />
+          </Route>
+        </Switch>
+      </div>
     </Router>
   </AuthProvider>
 );

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Card } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/AuthHook.jsx';
 import routes from '../routes.js';
@@ -21,7 +21,6 @@ const LoginPage = () => {
         password,
       },
     }).catch((e) => e);
-    console.log(request);
     if (request.status !== 200) {
       changeValidState({ isInvalid: true, feedback: 'неверный логин или пароль' });
     } else {
@@ -56,26 +55,38 @@ const LoginPage = () => {
   } */
 
   return (
-    <Form onSubmit={formik.handleSubmit}>
-      <Form.Group className="form-group">
-        <Form.Label htmlFor="username">Логин</Form.Label>
-        <Form.Control id="username" type="text" placeholder="Ваш логин" isInvalid={validState.isInvalid} name="username" autoComplete="username" required onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.username} />
-        {formik.touched.username
+    <div className="row justify-content-center align-content-center h-100">
+      <Card className="text-center col-xxl-6 col-12 col-md-8">
+        <Card.Header>Добро пожаловать в чат на минималках</Card.Header>
+        <Card.Body>
+          <Card.Title>Войти</Card.Title>
+          <Form onSubmit={formik.handleSubmit}>
+            <Form.Group className="form-group">
+              <Form.Label htmlFor="username">Логин</Form.Label>
+              <Form.Control id="username" type="text" placeholder="Ваш логин" isInvalid={validState.isInvalid} name="username" autoComplete="username" required onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.username} />
+              {formik.touched.username
         && formik.errors.username ? (<div>{formik.errors.username}</div>) : null}
-      </Form.Group>
-      <Form.Group className="form-group">
-        <Form.Label htmlFor="password">Пароль</Form.Label>
-        <Form.Control id="password" placeholder="Ваш пароль" name="password" isInvalid={validState.isInvalid} autoComplete="current-password" onBlur={formik.handleBlur} required type="password" onChange={formik.handleChange} value={formik.values.password} />
-        {formik.touched.password
+            </Form.Group>
+            <Form.Group className="form-group">
+              <Form.Label htmlFor="password">Пароль</Form.Label>
+              <Form.Control id="password" placeholder="Ваш пароль" name="password" isInvalid={validState.isInvalid} autoComplete="current-password" onBlur={formik.handleBlur} required type="password" onChange={formik.handleChange} value={formik.values.password} />
+              {formik.touched.password
         && formik.errors.password ? (<div>{formik.errors.password}</div>) : null}
-        <Form.Control.Feedback type="invalid">
-          {validState.feedback}
-        </Form.Control.Feedback>
-      </Form.Group>
-      <Button type="submit">
-        Войти
-      </Button>
-    </Form>
+              <Form.Control.Feedback type="invalid">
+                {validState.feedback}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Button type="submit">
+              Войти
+            </Button>
+          </Form>
+        </Card.Body>
+        <Card.Footer>
+          Нет аккаунта?
+          <a href="#">Регистрация</a>
+        </Card.Footer>
+      </Card>
+    </div>
   );
 };
 
