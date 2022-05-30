@@ -61,14 +61,10 @@ const ChatPage = ({ socket, username }) => {
       sendMessage(values.messageText, currentCh, username, inputField.current)
         .catch((e) => console.log(e));
       inputForm.current.removeAttribute('disabled');
-      // scroll();
+      formik.setFieldValue('messageText', '', false);
+      inputField.current.focus();
     },
   });
-
-  const handleClick = () => {
-    inputField.current.focus();
-    // formik.values.messageText = '';
-  };
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -100,14 +96,12 @@ const ChatPage = ({ socket, username }) => {
     });
   }, [socket]);
 
-  /*
   useEffect(() => {
     if (inputField.current) {
       inputField.current.focus();
     }
   }, [currentCh]);
-  */
-  console.log(currentCh);
+
   return (currentCh
     && (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">
@@ -138,12 +132,11 @@ const ChatPage = ({ socket, username }) => {
                     placeholder="Введите текст сообщения"
                     aria-describedby="basic-addon2"
                     id="messageText"
-                    onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     value={formik.values.messageText}
                     ref={inputField}
                   />
-                  <Button type="submit" disabled={!formik.values.messageText} onClick={handleClick} variant="outline-secondary">
+                  <Button type="submit" disabled={!formik.values.messageText} variant="outline-success">
                     &#9655;
                   </Button>
                 </InputGroup>

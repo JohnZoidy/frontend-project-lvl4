@@ -96,7 +96,7 @@ const LoginPage = () => {
         <Card.Footer>
           Нет аккаунта?
           {' '}
-          <a href="#">Регистрация</a>
+          <a href="/signup">Регистрация</a>
         </Card.Footer>
       </Card>
     </div>

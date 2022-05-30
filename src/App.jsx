@@ -6,7 +6,7 @@ import {
   Redirect,
   useLocation,
 } from 'react-router-dom';
-import { Navbar, Container } from 'react-bootstrap';
+import { Navbar, Container, Button } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 import LoginPage from './components/LoginPage.jsx';
 import Page404 from './components/Page404.jsx';
@@ -42,7 +42,8 @@ const App = () => {
         <div className="d-flex flex-column h-100">
           <Navbar className="shadow-sm" bg="white" expand="lg">
             <Container>
-              <Navbar.Brand href="/">Slack on minimals</Navbar.Brand>
+              <Navbar.Brand href="/">Hexlet Chat</Navbar.Brand>
+              {user && <Button variant="outline-success" onClick={logOut}>Выйти</Button>}
             </Container>
           </Navbar>
           <Switch>
