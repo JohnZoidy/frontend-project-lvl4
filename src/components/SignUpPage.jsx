@@ -26,7 +26,7 @@ const SignUpPage = () => {
     }).catch((e) => e);
     if (request.status !== 201) {
       console.log(request.status);
-      changeValidState({ isInvalid: true, feedback: t('valid.exists') });
+      changeValidState({ isInvalid: true, feedback: t('valid.exist') });
     } else {
       changeValidState({ isInvalid: false, feedback: '' });
       localStorage.setItem('userId', JSON.stringify(request.data));
@@ -52,7 +52,7 @@ const SignUpPage = () => {
       <Card className="text-center col-xxl-6 col-12 col-md-8">
         <Card.Header>{t('welcome')}</Card.Header>
         <Card.Body>
-          <Card.Title>{t('register')}</Card.Title>
+          <Card.Title>{t('buttons.register')}</Card.Title>
           <Form onSubmit={formik.handleSubmit}>
             <Form.Group className="form-group">
               <FloatingLabel controlId="username" label={t('login')} className="mb-3">
@@ -89,10 +89,10 @@ const SignUpPage = () => {
               </FloatingLabel>
             </Form.Group>
             <Form.Group className="form-group">
-              <FloatingLabel controlId="confirm" label={t('valid.requriedConfirm')} className="mb-3">
+              <FloatingLabel controlId="confirm" label={t('valid.requiredConfirm')} className="mb-3">
                 <Form.Control
                   name="confirm"
-                  placeholder={t('valid.requriedConfirm')}
+                  placeholder={t('valid.requiredConfirm')}
                   isInvalid={formik.errors.confirm || validState.isInvalid}
                   onBlur={formik.handleBlur}
                   required
@@ -109,7 +109,7 @@ const SignUpPage = () => {
               type="submit"
               disabled={formik.errors.password || formik.errors.confirm || formik.errors.username}
             >
-              {t('register')}
+              {t('buttons.register')}
             </Button>
           </Form>
         </Card.Body>
