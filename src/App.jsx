@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { Navbar, Container, Button } from 'react-bootstrap';
 import { io } from 'socket.io-client';
+import { useTranslation } from 'react-i18next';
 import LoginPage from './components/LoginPage.jsx';
 import Page404 from './components/Page404.jsx';
 import ChatPage from './components/ChatPage.jsx';
@@ -17,6 +18,7 @@ import AuthContext from './contexts/AuthContext.jsx';
 const PrivateRoute = ({ children }) => {
   const location = useLocation();
   const { user } = React.useContext(AuthContext);
+
   return (
     user !== '' ? children : <Redirect to={{ pathname: '/login', state: { from: location } }} />
   );
@@ -25,6 +27,7 @@ const PrivateRoute = ({ children }) => {
 const socket = io.connect('http://0.0.0.0:5000');
 
 const App = () => {
+  const { t } = useTranslation();
   const [user, setUser] = React.useState('');
   const logIn = (username) => setUser(username);
   const logOut = () => {
@@ -43,7 +46,7 @@ const App = () => {
           <Navbar className="shadow-sm" bg="white" expand="lg">
             <Container>
               <Navbar.Brand href="/">Hexlet Chat</Navbar.Brand>
-              {user && <Button variant="outline-success" onClick={logOut}>Выйти</Button>}
+              {user && <Button variant="outline-success" onClick={logOut}>{t('buttons.logOut')}</Button>}
             </Container>
           </Navbar>
           <Switch>

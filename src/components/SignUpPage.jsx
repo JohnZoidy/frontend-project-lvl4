@@ -4,6 +4,7 @@ import axios from 'axios';
 import {
   Button, Form, Card, FloatingLabel,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { signUp } from '../misc/validSchemes.js';
 import routes from '../routes.js';
@@ -13,7 +14,7 @@ const SignUpPage = () => {
   const nav = useHistory();
   const { logIn } = useContext(AuthContext);
   const [validState, changeValidState] = useState({ isInvalid: false, feedback: '' });
-
+  const { t } = useTranslation();
   const connect = async ({ username, password }) => {
     const request = await axios({
       method: 'post',
@@ -25,7 +26,7 @@ const SignUpPage = () => {
     }).catch((e) => e);
     if (request.status !== 201) {
       console.log(request.status);
-      changeValidState({ isInvalid: true, feedback: 'Такой пользователь уже существует' });
+      changeValidState({ isInvalid: true, feedback: t('valid.exists') });
     } else {
       changeValidState({ isInvalid: false, feedback: '' });
       localStorage.setItem('userId', JSON.stringify(request.data));
@@ -49,15 +50,15 @@ const SignUpPage = () => {
   return (
     <div className="row justify-content-center align-content-center h-100">
       <Card className="text-center col-xxl-6 col-12 col-md-8">
-        <Card.Header>Добро пожаловать в чат на минималках</Card.Header>
+        <Card.Header>{t('welcome')}</Card.Header>
         <Card.Body>
-          <Card.Title>Регистрация</Card.Title>
+          <Card.Title>{t('register')}</Card.Title>
           <Form onSubmit={formik.handleSubmit}>
             <Form.Group className="form-group">
-              <FloatingLabel controlId="username" label="Логин" className="mb-3">
+              <FloatingLabel controlId="username" label={t('login')} className="mb-3">
                 <Form.Control
                   type="text"
-                  placeholder="Логин"
+                  placeholder={t('login')}
                   isInvalid={formik.errors.username || validState.isInvalid}
                   name="username"
                   required
@@ -71,10 +72,10 @@ const SignUpPage = () => {
               </FloatingLabel>
             </Form.Group>
             <Form.Group className="form-group">
-              <FloatingLabel controlId="password" label="Пароль" className="mb-3">
+              <FloatingLabel controlId="password" label={t('pass')} className="mb-3">
                 <Form.Control
                   name="password"
-                  placeholder="Пароль"
+                  placeholder={t('pass')}
                   isInvalid={formik.errors.password || validState.isInvalid}
                   onBlur={formik.handleBlur}
                   required
@@ -88,10 +89,10 @@ const SignUpPage = () => {
               </FloatingLabel>
             </Form.Group>
             <Form.Group className="form-group">
-              <FloatingLabel controlId="confirm" label="Повторите пароль" className="mb-3">
+              <FloatingLabel controlId="confirm" label={t('valid.requriedConfirm')} className="mb-3">
                 <Form.Control
                   name="confirm"
-                  placeholder="Повторите пароль"
+                  placeholder={t('valid.requriedConfirm')}
                   isInvalid={formik.errors.confirm || validState.isInvalid}
                   onBlur={formik.handleBlur}
                   required
@@ -108,7 +109,7 @@ const SignUpPage = () => {
               type="submit"
               disabled={formik.errors.password || formik.errors.confirm || formik.errors.username}
             >
-              Регистрация
+              {t('register')}
             </Button>
           </Form>
         </Card.Body>

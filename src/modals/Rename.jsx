@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { Modal, Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { channel } from '../misc/validSchemes.js';
 import { chSelectors } from '../slices/channelsSlice.js';
 
 const Rename = ({ modal, onHide, socket }) => {
+  const { t } = useTranslation();
   const inputEl = useRef(null);
   const channels = useSelector(chSelectors.selectAll).map((chan) => chan.name);
   const [valid, setValid] = useState({ fdbk: '', state: false });
@@ -25,7 +27,7 @@ const Rename = ({ modal, onHide, socket }) => {
         onHide({ type: '', show: false });
       } else {
         setOnLoad(false);
-        setValid({ fdbk: `Ошибка сети, response ${response.status}`, state: true });
+        setValid({ fdbk: `${t('networkErr')} ${response.status}`, state: true });
       }
     });
   };
@@ -46,7 +48,7 @@ const Rename = ({ modal, onHide, socket }) => {
       onHide={() => onHide({ type: '', show: false })}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t('renameModal.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -66,14 +68,14 @@ const Rename = ({ modal, onHide, socket }) => {
               {valid.fdbk}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end mt-2">
-              <input className="btn btn-primary me-2" type="submit" value="Переименовать" disabled={formik.errors.channelName || onLoad} />
+              <input className="btn btn-primary me-2" type="submit" value={t('buttons.rename')} disabled={formik.errors.channelName || onLoad} />
               <button
                 className="btn btn-secondary"
                 type="button"
                 onClick={() => onHide({ type: '', show: false })}
                 disabled={onLoad}
               >
-                Отмена
+                {t('buttons.cancel')}
               </button>
             </div>
           </Form.Group>

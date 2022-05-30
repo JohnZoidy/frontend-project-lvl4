@@ -6,6 +6,7 @@ import {
 import { useDispatch, batch } from 'react-redux';
 import { useFormik } from 'formik';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { useTranslation } from 'react-i18next';
 import {
   addChannels, addChannel, removeChannel, updateChannel,
 } from '../slices/channelsSlice.js';
@@ -36,6 +37,7 @@ const renderModal = (modal, showModal, socket, current) => {
 };
 
 const ChatPage = ({ socket, username }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const inputField = useRef();
   const inputForm = useRef();
@@ -129,7 +131,7 @@ const ChatPage = ({ socket, username }) => {
               <Form onSubmit={formik.handleSubmit} ref={inputForm}>
                 <InputGroup>
                   <FormControl
-                    placeholder="Введите текст сообщения"
+                    placeholder={t('messagePlace')}
                     aria-describedby="basic-addon2"
                     id="messageText"
                     onChange={formik.handleChange}

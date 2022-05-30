@@ -1,9 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { chSelectors } from '../slices/channelsSlice.js';
 
 export default (props) => {
   const { id, count } = props;
+  const { t } = useTranslation();
   const { name } = useSelector((state) => chSelectors.selectById(state, id));
 
   return (
@@ -12,7 +14,7 @@ export default (props) => {
         {`# ${name}`}
       </div>
       <div className=".fs-6 text-muted">
-        {`${count} messages (need to fix by i18)`}
+        {t('message', { count })}
       </div>
     </div>
   );

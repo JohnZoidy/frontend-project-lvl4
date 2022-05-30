@@ -4,6 +4,7 @@ import axios from 'axios';
 import {
   Button, Form, Card, FloatingLabel,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { login } from '../misc/validSchemes.js';
 import routes from '../routes.js';
@@ -11,6 +12,7 @@ import AuthContext from '../contexts/AuthContext.jsx';
 
 const LoginPage = () => {
   const nav = useHistory();
+  const { t } = useTranslation();
   const { logIn } = useContext(AuthContext);
   const [validState, changeValidState] = useState({ isInvalid: false, feedback: '' });
 
@@ -24,7 +26,7 @@ const LoginPage = () => {
       },
     }).catch((e) => e);
     if (request.status !== 200) {
-      changeValidState({ isInvalid: true, feedback: 'неверный логин или пароль' });
+      changeValidState({ isInvalid: true, feedback: t('valid.incorrect') });
     } else {
       changeValidState({ isInvalid: false, feedback: '' });
       localStorage.setItem('userId', JSON.stringify(request.data));
@@ -47,15 +49,15 @@ const LoginPage = () => {
   return (
     <div className="row justify-content-center align-content-center h-100">
       <Card className="text-center col-xxl-6 col-12 col-md-8">
-        <Card.Header>Добро пожаловать в чат на минималках</Card.Header>
+        <Card.Header>{t('welcome')}</Card.Header>
         <Card.Body>
           <Card.Title>Войти</Card.Title>
           <Form onSubmit={formik.handleSubmit}>
             <Form.Group className="form-group">
-              <FloatingLabel controlId="username" label="Логин" className="mb-3">
+              <FloatingLabel controlId="username" label={t('login')} className="mb-3">
                 <Form.Control
                   type="text"
-                  placeholder="Логин"
+                  placeholder={t('login')}
                   isInvalid={formik.errors.username || validState.isInvalid}
                   name="username"
                   required
@@ -69,10 +71,10 @@ const LoginPage = () => {
               </FloatingLabel>
             </Form.Group>
             <Form.Group className="form-group">
-              <FloatingLabel controlId="password" label="Пароль" className="mb-3">
+              <FloatingLabel controlId="password" label={t('pass')} className="mb-3">
                 <Form.Control
                   name="password"
-                  placeholder="Пароль"
+                  placeholder={t('pass')}
                   isInvalid={formik.errors.password || validState.isInvalid}
                   onBlur={formik.handleBlur}
                   required
@@ -89,14 +91,13 @@ const LoginPage = () => {
               type="submit"
               disabled={formik.errors.password || formik.errors.username}
             >
-              Войти
+              {t('buttons.logIn')}
             </Button>
           </Form>
         </Card.Body>
         <Card.Footer>
-          Нет аккаунта?
-          {' '}
-          <a href="/signup">Регистрация</a>
+          {t('noAccount')}
+          <a href="/signup">{t('buttons.register')}</a>
         </Card.Footer>
       </Card>
     </div>

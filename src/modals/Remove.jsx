@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const Remove = ({
   modal, onHide, socket, current,
 }) => {
+  const { t } = useTranslation();
   const [onLoad, setOnLoad] = useState(false);
   const removeChannel = async (id) => {
     const channelData = { id };
@@ -27,10 +29,10 @@ const Remove = ({
       onHide={() => onHide({ type: '', show: false })}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('removeModal.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Modal.Title>Уверены?</Modal.Title>
+        <Modal.Title>{t('removeModal.confirm')}</Modal.Title>
         <div className="d-flex justify-content-end mt-2">
           <button
             className="btn btn-danger me-2"
@@ -46,7 +48,7 @@ const Remove = ({
             onClick={() => onHide({ type: '', show: false })}
             disabled={onLoad}
           >
-            Отмена
+            {t('buttons.cancel')}
           </button>
         </div>
       </Modal.Body>

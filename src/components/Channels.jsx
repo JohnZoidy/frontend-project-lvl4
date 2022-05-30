@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Nav, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { chSelectors } from '../slices/channelsSlice.js';
 
 export default ({ id, changeCurrent, showModal }) => {
   const channels = useSelector(chSelectors.selectAll);
+  const { t } = useTranslation();
 
   const ChannelList = () => channels
     .map((chan) => {
@@ -16,12 +18,12 @@ export default ({ id, changeCurrent, showModal }) => {
             <Dropdown.Toggle style={{ flex: 'none' }} split variant="primary" />
 
             <Dropdown.Menu>
-              <Dropdown.Item onClick={() => showModal({ type: 'renaming', show: true, data: { name: chan.name, id: chan.id } })}>Переименовать</Dropdown.Item>
+              <Dropdown.Item onClick={() => showModal({ type: 'renaming', show: true, data: { name: chan.name, id: chan.id } })}>{t('buttons.rename')}</Dropdown.Item>
               <Dropdown.Item onClick={() => showModal({
                 type: 'removing', show: true, data: chan.id, setDefault: changeCurrent,
               })}
               >
-                Удалить
+                {t('buttons.delete')}
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
