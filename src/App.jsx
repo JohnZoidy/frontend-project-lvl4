@@ -1,6 +1,4 @@
 import React from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
-
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,66 +7,64 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Navbar, Container } from 'react-bootstrap';
-// Импортируем нужные действия slices
-
+import { io } from 'socket.io-client';
 import LoginPage from './components/LoginPage.jsx';
 import Page404 from './components/Page404.jsx';
 import ChatPage from './components/ChatPage.jsx';
 import SignUpPage from './components/SignUpPage.jsx';
 import AuthContext from './contexts/AuthContext.jsx';
-// import useAuth from './hooks/AuthHook.jsx';
 
-const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = React.useState(false);
+const PrivateRoute = ({ children }) => {
+  const location = useLocation();
+  const { user } = React.useContext(AuthContext);
+  return (
+    user !== '' ? children : <Redirect to={{ pathname: '/login', state: { from: location } }} />
+  );
+};
 
-  const logIn = () => setLoggedIn(true);
+const socket = io.connect('http://0.0.0.0:5000');
+
+const App = () => {
+  const [user, setUser] = React.useState('');
+  const logIn = (username) => setUser(username);
   const logOut = () => {
     localStorage.removeItem('userId');
-    setLoggedIn(false);
+    setUser('');
   };
+  if (user === '' && localStorage.getItem('userId')) {
+    const data = JSON.parse(localStorage.getItem('userId'));
+    logIn(data.username);
+  }
 
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
-      {children}
+    <AuthContext.Provider value={{ user, logIn, logOut }}>
+      <Router>
+        <div className="d-flex flex-column h-100">
+          <Navbar className="shadow-sm" bg="white" expand="lg">
+            <Container>
+              <Navbar.Brand href="/">Slack on minimals</Navbar.Brand>
+            </Container>
+          </Navbar>
+          <Switch>
+            <Route exact path="/">
+              <PrivateRoute>
+                <ChatPage username={user} socket={socket} />
+              </PrivateRoute>
+            </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <Route path="/signup">
+              <SignUpPage />
+            </Route>
+            <Route path="*">
+              <Page404 />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     </AuthContext.Provider>
   );
 };
-const PrivateRoute = ({ children }) => {
-  // const auth = useAuth();
-  const location = useLocation();
-  return (
-    localStorage.getItem('userId') ? children : <Redirect to={{ pathname: '/login', state: { from: location } }} />
-  );
-};
-
-const App = () => (
-  <AuthProvider>
-    <Router>
-      <div className="d-flex flex-column h-100">
-        <Navbar className="shadow-sm" bg="white" expand="lg">
-          <Container>
-            <Navbar.Brand href="/">Slack on minimals</Navbar.Brand>
-          </Container>
-        </Navbar>
-        <Switch>
-          <Route exact path="/">
-            <PrivateRoute>
-              <ChatPage />
-            </PrivateRoute>
-          </Route>
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-          <Route path="/signup">
-            <SignUpPage />
-          </Route>
-          <Route path="*">
-            <Page404 />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  </AuthProvider>
-);
 
 export default App;
