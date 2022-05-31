@@ -8,7 +8,7 @@ i18n
     resources,
     lng: 'ru',
     fallbackLng: 'ru',
-    debug: true,
+    debug: false,
 
     interpolation: {
       escapeValue: false,
