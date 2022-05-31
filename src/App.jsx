@@ -34,8 +34,7 @@ const PrivateRoute = ({ children }) => {
   );
 };
 
-// const socket = io.connect('http://0.0.0.0:5000');
-const socket = io.connect('https://serene-gorge-12014.herokuapp.com');
+const socket = io();
 
 const App = () => {
   const { t } = useTranslation();
