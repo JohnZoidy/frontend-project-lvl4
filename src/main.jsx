@@ -14,10 +14,10 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-const mountNode = document.getElementById('chat');
-const root = ReactDOM.createRoot(mountNode);
-
 export default () => {
+  const mountNode = document.getElementById('chat');
+  const root = ReactDOM.createRoot(mountNode);
+
   root.render(
     <Provider store={store}>
       <App />
