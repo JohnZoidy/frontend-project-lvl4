@@ -14,9 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export default () => (
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
