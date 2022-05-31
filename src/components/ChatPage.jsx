@@ -1,5 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect, useState, useRef, useContext,
+} from 'react';
 import {
   Container, Row, Col, Button, InputGroup, FormControl, Form,
 } from 'react-bootstrap';
@@ -7,6 +9,7 @@ import { useDispatch, batch } from 'react-redux';
 import { useFormik } from 'formik';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
 import {
   addChannels, addChannel, removeChannel, updateChannel,
 } from '../slices/channelsSlice.js';
@@ -16,6 +19,7 @@ import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
 import Header from './Header.jsx';
 import getModal from '../modals/index.js';
+import AuthContext from '../contexts/AuthContext.jsx';
 
 const getAuthHeader = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
@@ -44,6 +48,7 @@ const ChatPage = ({ socket, username }) => {
   const [currentCh, setCurrentCh] = useState();
   const [count, setCount] = useState();
   const [modal, showModal] = useState({ type: '', show: false });
+  const { logOut } = useContext(AuthContext);
   // const scroll = useScrollToBottom();
   const sendMessage = async (body, channelId, user) => {
     const messageData = {
@@ -52,6 +57,18 @@ const ChatPage = ({ socket, username }) => {
       username: user,
     };
     await socket.emit('newMessage', messageData);
+  };
+
+  const handleErrors = (err) => {
+    toast.error(`${t('toast.error')} ${err}`, {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   const formik = useFormik({
@@ -71,7 +88,22 @@ const ChatPage = ({ socket, username }) => {
   useEffect(() => {
     const fetchContent = async () => {
       const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          if (e.response.status === 401) {
+            toast.error(t('toast.authErr'), {
+              position: 'top-right',
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+            logOut();
+          } else {
+            console.log(e);
+          }
+        });
       batch(() => {
         dispatch(addChannels(data.channels));
         dispatch(setMessages(data.messages));
@@ -89,13 +121,43 @@ const ChatPage = ({ socket, username }) => {
     socket.on('newChannel', (data) => {
       dispatch(addChannel(data));
       setCurrentCh(data.id);
+      toast.success(t('toast.create'), {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
     socket.on('removeChannel', (data) => {
       dispatch(removeChannel(data.id));
+      toast.success(t('toast.delete'), {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
     socket.on('renameChannel', (data) => {
       dispatch(updateChannel({ id: data.id, changes: data }));
+      toast.success(t('toast.rename'), {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     });
+    socket.on('connect_error', (err) => handleErrors(err));
+    socket.on('connect_failed', (err) => handleErrors(err));
+    socket.on('disconnect', (err) => handleErrors(err));
   }, [socket]);
 
   useEffect(() => {
@@ -148,6 +210,7 @@ const ChatPage = ({ socket, username }) => {
         </Col>
       </Row>
       {renderModal(modal, showModal, socket, currentCh)}
+      <ToastContainer />
     </Container>
     )
   );

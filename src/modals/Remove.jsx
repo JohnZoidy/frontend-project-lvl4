@@ -10,11 +10,11 @@ const Remove = ({
   const removeChannel = async (id) => {
     const channelData = { id };
     setOnLoad(true);
+    if (id === current) {
+      modal.setDefault(1); // not good
+    }
     await socket.emit('removeChannel', channelData, (response) => {
       if (response.status === 'ok') {
-        if (id === current) {
-          modal.setDefault(1); // bad, need refactor?
-        }
         onHide({ type: '', show: false });
       } else {
         setOnLoad(false);
