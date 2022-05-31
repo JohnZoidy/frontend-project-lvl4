@@ -1,6 +1,5 @@
 // @ts-check
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import './i18.js';
 import 'core-js/stable/index.js';
@@ -14,13 +13,10 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-export default () => {
-  const mountNode = document.getElementById('chat');
-  const root = ReactDOM.createRoot(mountNode);
-
-  root.render(
+export default () => (
+  <React.StrictMode>
     <Provider store={store}>
       <App />
-    </Provider>,
-  );
-};
+    </Provider>
+  </React.StrictMode>
+);

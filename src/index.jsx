@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom/client';
 import runApp from './main.jsx';
 
-runApp();
+ReactDOM.createRoot(document.getElementById('chat')).render(runApp());
