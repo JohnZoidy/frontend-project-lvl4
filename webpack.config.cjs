@@ -32,6 +32,12 @@ module.exports = {
         use: 'babel-loader',
       },
       {
+        test: /\.(jpg|svg)$/,
+        use: {
+          loader: 'url-loader',
+        },
+      },
+      {
         test: /\.s[ac]ss$/i,
         use: [
           { loader: MiniCssExtractPlugin.loader },

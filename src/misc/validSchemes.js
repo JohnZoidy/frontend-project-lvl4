@@ -3,7 +3,6 @@ import i18next from '../i18.js';
 
 const login = () => Yup.object({
   username: Yup.string()
-    .max(20, i18next.t('valid.max', { count: 20 }))
     .trim()
     .required(i18next.t('valid.required')),
   password: Yup.string()
@@ -12,8 +11,8 @@ const login = () => Yup.object({
 
 const signUp = () => Yup.object({
   username: Yup.string()
-    .max(20, i18next.t('valid.max', { count: 20 }))
-    .min(3, i18next.t('valid.min', { count: 3 }))
+    .max(20, i18next.t('valid.maxmin', { count: 20 }))
+    .min(3, i18next.t('valid.maxmin', { count: 3 }))
     .trim()
     .required(i18next.t('valid.required')),
   password: Yup.string()
@@ -26,10 +25,10 @@ const signUp = () => Yup.object({
 
 const channel = (arr) => Yup.object({
   channelName: Yup.string()
-    .max(20, i18next.t('valid.max', { count: 20 }))
+    .max(20, i18next.t('valid.maxminCh', { count: 20 }))
     .required(i18next.t('valid.required'))
     .trim()
-    .min(4, i18next.t('valid.min', { count: 4 }))
+    .min(4, i18next.t('valid.maxminCh', { count: 4 }))
     .notOneOf(arr, i18next.t('valid.unique')),
 });
 
