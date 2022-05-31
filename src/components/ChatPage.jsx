@@ -10,6 +10,7 @@ import { useFormik } from 'formik';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
+import * as filter from 'leo-profanity';
 import {
   addChannels, addChannel, removeChannel, updateChannel,
 } from '../slices/channelsSlice.js';
@@ -86,6 +87,7 @@ const ChatPage = ({ socket, username }) => {
   });
 
   useEffect(() => {
+    filter.loadDictionary('ru');
     const fetchContent = async () => {
       const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() })
         .catch((e) => {
@@ -181,13 +183,18 @@ const ChatPage = ({ socket, username }) => {
               &#8853;
             </button>
           </div>
-          <Channels id={currentCh} changeCurrent={setCurrentCh} showModal={showModal} />
+          <Channels
+            id={currentCh}
+            changeCurrent={setCurrentCh}
+            showModal={showModal}
+            filter={filter}
+          />
         </Col>
         <Col className="p-0 h-100 text-start">
           <div className="d-flex flex-column h-100">
             <Header id={currentCh} count={count} />
             <ScrollToBottom className="message-list px-5">
-              <Messages id={currentCh} setCount={setCount} />
+              <Messages id={currentCh} setCount={setCount} filter={filter} />
             </ScrollToBottom>
             <div className="mt-auto px-2 py-3">
               <Form onSubmit={formik.handleSubmit} ref={inputForm}>
