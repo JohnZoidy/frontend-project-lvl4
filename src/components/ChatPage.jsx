@@ -61,7 +61,7 @@ const ChatPage = ({ username }) => {
   });
 
   useEffect(() => {
-    filter.loadDictionary('ru');
+    filter.add(filter.getDictionary('ru'));
     const fetchContent = async () => {
       const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() })
         .catch((e) => {
