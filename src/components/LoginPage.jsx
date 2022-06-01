@@ -107,7 +107,7 @@ const LoginPage = () => {
         </Card.Body>
         <Card.Footer>
           {t('noAccount')}
-          <a href="/signup">{t('buttons.register')}</a>
+          <a href="/signup">{t('regPage.title')}</a>
         </Card.Footer>
       </Card>
     </div>
