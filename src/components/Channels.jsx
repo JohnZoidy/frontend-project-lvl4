@@ -1,14 +1,14 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Nav, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { chSelectors } from '../slices/channelsSlice.js';
+import { setActive } from '../slices/activeChannelSlice.js';
 
-export default ({
-  id, changeCurrent, showModal, filter,
-}) => {
+export default ({ id, showModal, filter }) => {
   const channels = useSelector(chSelectors.selectAll);
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const ChannelList = () => channels
     .map((chan) => {
@@ -34,7 +34,7 @@ export default ({
       variant="pills"
       className="text-start flex-column"
       activeKey={id}
-      onSelect={(selectedKey) => changeCurrent(Number(selectedKey))}
+      onSelect={(selectedKey) => dispatch(setActive(Number(selectedKey)))}
     >
       <ChannelList />
     </Nav>

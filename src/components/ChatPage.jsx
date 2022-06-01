@@ -5,7 +5,7 @@ import React, {
 import {
   Container, Row, Col, Button, InputGroup, FormControl, Form,
 } from 'react-bootstrap';
-import { useDispatch, batch } from 'react-redux';
+import { useDispatch, batch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import * as filter from 'leo-profanity';
 import { addChannels } from '../slices/channelsSlice.js';
 import { setMessages } from '../slices/messagesSlice.js';
+import { setActive } from '../slices/activeChannelSlice.js';
 import routes from '../routes.js';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
@@ -35,11 +36,11 @@ const ChatPage = ({ username }) => {
   const dispatch = useDispatch();
   const inputField = useRef();
   const inputForm = useRef();
-  const { createMessage, currentChId, setActiveChannel } = useContext(SocketContext);
+  const { createMessage } = useContext(SocketContext);
   const [count, setCount] = useState();
   const [modal, showModal] = useState({ type: '', show: false });
   const { logOut, getAuthHeader } = useContext(AuthContext);
-  // const scroll = useScrollToBottom();
+  const currentChId = useSelector((state) => state.activeChannel.id);
 
   const formik = useFormik({
     initialValues: {
@@ -80,10 +81,10 @@ const ChatPage = ({ username }) => {
           }
         });
       batch(() => {
+        dispatch(setActive(data.currentChannelId));
         dispatch(addChannels(data.channels));
         dispatch(setMessages(data.messages));
       });
-      setActiveChannel(data.currentChannelId);
     };
 
     fetchContent();
@@ -113,7 +114,6 @@ const ChatPage = ({ username }) => {
           <Channels
             id={currentChId}
             showModal={showModal}
-            changeCurrent={setActiveChannel}
             filter={filter}
           />
         </Col>
