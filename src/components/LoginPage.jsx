@@ -97,7 +97,6 @@ const LoginPage = () => {
                 </Form.Group>
                 <Button
                   type="submit"
-                  disabled={formik.errors.password || formik.errors.username}
                 >
                   {t('buttons.logIn')}
                 </Button>
