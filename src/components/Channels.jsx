@@ -15,7 +15,7 @@ export default ({ id, showModal, filter }) => {
       if (chan.removable) {
         return (
           <Dropdown className="mw-100" as={ButtonGroup} key={chan.id}>
-            <Nav.Link className="text-truncate" key={chan.id} eventKey={chan.id}>{filter.clean(chan.name)}</Nav.Link>
+            <Nav.Link className="text-truncate" key={chan.id} eventKey={chan.id}>{`# ${filter.clean(chan.name)}`}</Nav.Link>
 
             <Dropdown.Toggle style={{ flex: 'none' }} split variant="primary" />
 
@@ -26,7 +26,7 @@ export default ({ id, showModal, filter }) => {
           </Dropdown>
         );
       }
-      return <Nav.Link key={chan.id} eventKey={chan.id}>{chan.name}</Nav.Link>;
+      return <Nav.Link key={chan.id} eventKey={chan.id}>{`# ${chan.name}`}</Nav.Link>;
     });
 
   return (

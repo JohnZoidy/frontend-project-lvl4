@@ -44,6 +44,7 @@ export default {
       },
       networkErr: 'Ошибка соединения',
       pass: 'Пароль',
+      channels: 'Каналы',
       passConfirm: 'Подтвердите пароль',
       login: 'Ваш ник',
       welcome: 'Добро пожаловать в уютный чат',

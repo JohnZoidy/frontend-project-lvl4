@@ -102,13 +102,14 @@ const ChatPage = ({ username }) => {
       <Row className="h-100 bg-white flex-md-row">
         <Col className="col-4 col-md-2 border-end pt-3 px-0 bg-light">
           <div className="p-3 d-flex justify-content-between fs-5">
-            Каналы
+            {t('channels')}
             <button
               className="text-end badge bg-success"
               type="button"
               onClick={() => showModal({ type: 'adding', show: true })}
             >
               &#8853;
+              <span className="visually-hidden">+</span>
             </button>
           </div>
           <Channels
