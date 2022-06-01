@@ -20,7 +20,7 @@ const signUp = () => Yup.object({
     .required(i18next.t('valid.required')),
   confirm: Yup.string()
     .oneOf([Yup.ref('password'), null], i18next.t('valid.match'))
-    .required(i18next.t('valid.requiredConfirm')),
+    .required(i18next.t('valid.match')),
 });
 
 const channel = (arr) => Yup.object({

@@ -96,10 +96,10 @@ const SignUpPage = () => {
                   </FloatingLabel>
                 </Form.Group>
                 <Form.Group className="form-group">
-                  <FloatingLabel controlId="confirm" label={t('valid.requiredConfirm')} className="mb-3">
+                  <FloatingLabel controlId="confirm" label={t('passConfirm')} className="mb-3">
                     <Form.Control
                       name="confirm"
-                      placeholder={t('valid.requiredConfirm')}
+                      placeholder={t('passConfirm')}
                       isInvalid={formik.errors.confirm || validState.isInvalid}
                       onBlur={formik.handleBlur}
                       required
