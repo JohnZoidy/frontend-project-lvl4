@@ -129,6 +129,7 @@ const ChatPage = ({ username }) => {
                   <FormControl
                     placeholder={t('messagePlace')}
                     aria-describedby="basic-addon2"
+                    id="messageText"
                     aria-label="Новое сообщение"
                     onChange={formik.handleChange}
                     value={formik.values.messageText}
