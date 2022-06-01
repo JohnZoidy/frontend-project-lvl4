@@ -5,16 +5,17 @@ import {
   Button, Form, Card, FloatingLabel, Row, Col, Image,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { login } from '../misc/validSchemes.js';
 import routes from '../routes.js';
-import AuthContext from '../contexts/AuthContext.jsx';
+import { AuthContext } from '../contexts/AuthContext.jsx';
 import logo from '../../assets/images/login.svg';
 
 const LoginPage = () => {
-  const nav = useHistory();
   const { t } = useTranslation();
   const { logIn } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [validState, changeValidState] = useState({ isInvalid: false, feedback: '' });
 
   const connect = async ({ username, password }) => {
@@ -31,8 +32,9 @@ const LoginPage = () => {
     } else {
       changeValidState({ isInvalid: false, feedback: '' });
       localStorage.setItem('userId', JSON.stringify(request.data));
+      const { from } = location.state || { from: { pathname: '/' } };
+      navigate(from, { replace: true });
       logIn(username);
-      nav.push('../');
     }
   };
 

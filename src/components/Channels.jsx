@@ -21,12 +21,7 @@ export default ({
 
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => showModal({ type: 'renaming', show: true, data: { name: chan.name, id: chan.id } })}>{t('buttons.rename')}</Dropdown.Item>
-              <Dropdown.Item onClick={() => showModal({
-                type: 'removing', show: true, data: chan.id, setDefault: changeCurrent,
-              })}
-              >
-                {t('buttons.delete')}
-              </Dropdown.Item>
+              <Dropdown.Item onClick={() => showModal({ type: 'removing', show: true, data: chan.id })}>{t('buttons.delete')}</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         );

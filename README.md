@@ -8,7 +8,7 @@
 Данный проект представляет из себя упрощенную версию онлайн-чата с возможностью регистрации пользователей и создания каналов.
 
 
-### Heroku link:
+### Ссылка на демо версию:
 
-<a href="https://serene-gorge-12014.herokuapp.com/" target="_blank">Демо проекта</a>
+<a href="https://serene-gorge-12014.herokuapp.com/" target="_blank">Демо</a>
 

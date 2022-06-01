@@ -5,14 +5,15 @@ import {
   Button, Form, Card, FloatingLabel, Row, Col, Image,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { signUp } from '../misc/validSchemes.js';
 import routes from '../routes.js';
-import AuthContext from '../contexts/AuthContext.jsx';
+import { AuthContext } from '../contexts/AuthContext.jsx';
 import logo from '../../assets/images/signup.svg';
 
 const SignUpPage = () => {
-  const nav = useHistory();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { logIn } = useContext(AuthContext);
   const [validState, changeValidState] = useState({ isInvalid: false, feedback: '' });
   const { t } = useTranslation();
@@ -26,13 +27,13 @@ const SignUpPage = () => {
       },
     }).catch((e) => e);
     if (request.status !== 201) {
-      console.log(request.status);
       changeValidState({ isInvalid: true, feedback: t('valid.exist') });
     } else {
       changeValidState({ isInvalid: false, feedback: '' });
       localStorage.setItem('userId', JSON.stringify(request.data));
       logIn(username);
-      nav.push('../');
+      const { from } = location.state || { from: { pathname: '/' } };
+      navigate(from, { replace: true });
     }
   };
 

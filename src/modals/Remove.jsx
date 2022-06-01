@@ -1,26 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { SocketContext } from '../contexts/SocketAPI.jsx';
 
-const Remove = ({
-  modal, onHide, socket, current,
-}) => {
+const Remove = ({ modal, onHide }) => {
   const { t } = useTranslation();
   const [onLoad, setOnLoad] = useState(false);
-  const removeChannel = async (id) => {
+  const { removeCh } = useContext(SocketContext);
+
+  const removeChannel = (id) => {
     const channelData = { id };
     setOnLoad(true);
-    if (id === current) {
-      modal.setDefault(1); // not good
+    try {
+      removeCh(channelData);
+      onHide({ type: '', show: false });
+    } catch {
+      setOnLoad(false);
     }
-    await socket.emit('removeChannel', channelData, (response) => {
-      if (response.status === 'ok') {
-        onHide({ type: '', show: false });
-      } else {
-        setOnLoad(false);
-        // alert - network error
-      }
-    });
   };
 
   return (
@@ -40,7 +36,7 @@ const Remove = ({
             onClick={() => removeChannel(modal.data)}
             disabled={onLoad}
           >
-            Удалить
+            {t('buttons.delete')}
           </button>
           <button
             className="btn btn-secondary"

@@ -9,68 +9,37 @@ import { useDispatch, batch } from 'react-redux';
 import { useFormik } from 'formik';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useTranslation } from 'react-i18next';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import * as filter from 'leo-profanity';
-import {
-  addChannels, addChannel, removeChannel, updateChannel,
-} from '../slices/channelsSlice.js';
-import { setMessages, addMessage } from '../slices/messagesSlice.js';
+import { addChannels } from '../slices/channelsSlice.js';
+import { setMessages } from '../slices/messagesSlice.js';
 import routes from '../routes.js';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
 import Header from './Header.jsx';
 import getModal from '../modals/index.js';
-import AuthContext from '../contexts/AuthContext.jsx';
+import { AuthContext } from '../contexts/AuthContext.jsx';
+import { SocketContext } from '../contexts/SocketAPI.jsx';
 
-const getAuthHeader = () => {
-  const userId = JSON.parse(localStorage.getItem('userId'));
-
-  if (userId && userId.token) {
-    return { Authorization: `Bearer ${userId.token}` };
-  }
-
-  return {};
-};
-
-const renderModal = (modal, showModal, socket, current) => {
+const renderModal = (modal, showModal) => {
   if (!modal.show) {
     return null;
   }
 
   const Component = getModal(modal.type);
-  return <Component modal={modal} onHide={showModal} socket={socket} current={current} />;
+  return <Component modal={modal} onHide={showModal} />;
 };
 
-const ChatPage = ({ socket, username }) => {
+const ChatPage = ({ username }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const inputField = useRef();
   const inputForm = useRef();
-  const [currentCh, setCurrentCh] = useState();
+  const { createMessage, currentChId, setActiveChannel } = useContext(SocketContext);
   const [count, setCount] = useState();
   const [modal, showModal] = useState({ type: '', show: false });
-  const { logOut } = useContext(AuthContext);
+  const { logOut, getAuthHeader } = useContext(AuthContext);
   // const scroll = useScrollToBottom();
-  const sendMessage = async (body, channelId, user) => {
-    const messageData = {
-      body,
-      channelId,
-      username: user,
-    };
-    await socket.emit('newMessage', messageData);
-  };
-
-  const handleErrors = (err) => {
-    toast.error(`${t('toast.error')} ${err}`, {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -78,8 +47,12 @@ const ChatPage = ({ socket, username }) => {
     },
     onSubmit: (values) => {
       inputForm.current.setAttribute('disabled', true);
-      sendMessage(values.messageText, currentCh, username, inputField.current)
-        .catch((e) => console.log(e));
+      const messageData = {
+        body: values.messageText,
+        channelId: currentChId,
+        username,
+      };
+      createMessage(messageData);
       inputForm.current.removeAttribute('disabled');
       formik.setFieldValue('messageText', '', false);
       inputField.current.focus();
@@ -110,65 +83,19 @@ const ChatPage = ({ socket, username }) => {
         dispatch(addChannels(data.channels));
         dispatch(setMessages(data.messages));
       });
-      setCurrentCh(data.currentChannelId);
+      setActiveChannel(data.currentChannelId);
     };
 
     fetchContent();
   }, []);
 
   useEffect(() => {
-    socket.on('newMessage', (data) => {
-      dispatch(addMessage(data));
-    });
-    socket.on('newChannel', (data) => {
-      dispatch(addChannel(data));
-      setCurrentCh(data.id);
-      toast.success(t('toast.create'), {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
-    socket.on('removeChannel', (data) => {
-      dispatch(removeChannel(data.id));
-      toast.success(t('toast.delete'), {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
-    socket.on('renameChannel', (data) => {
-      dispatch(updateChannel({ id: data.id, changes: data }));
-      toast.success(t('toast.rename'), {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
-    socket.on('connect_error', (err) => handleErrors(err));
-    socket.on('connect_failed', (err) => handleErrors(err));
-    socket.on('disconnect', (err) => handleErrors(err));
-  }, [socket]);
-
-  useEffect(() => {
     if (inputField.current) {
       inputField.current.focus();
     }
-  }, [currentCh]);
+  }, [currentChId]);
 
-  return (currentCh
+  return (currentChId
     && (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">
       <Row className="h-100 bg-white flex-md-row">
@@ -184,17 +111,17 @@ const ChatPage = ({ socket, username }) => {
             </button>
           </div>
           <Channels
-            id={currentCh}
-            changeCurrent={setCurrentCh}
+            id={currentChId}
             showModal={showModal}
+            changeCurrent={setActiveChannel}
             filter={filter}
           />
         </Col>
         <Col className="p-0 h-100 text-start">
           <div className="d-flex flex-column h-100">
-            <Header id={currentCh} count={count} />
+            <Header id={currentChId} count={count} />
             <ScrollToBottom className="message-list px-5">
-              <Messages id={currentCh} setCount={setCount} filter={filter} />
+              <Messages id={currentChId} setCount={setCount} filter={filter} />
             </ScrollToBottom>
             <div className="mt-auto px-2 py-3">
               <Form onSubmit={formik.handleSubmit} ref={inputForm}>
@@ -216,8 +143,7 @@ const ChatPage = ({ socket, username }) => {
           </div>
         </Col>
       </Row>
-      {renderModal(modal, showModal, socket, currentCh)}
-      <ToastContainer />
+      {renderModal(modal, showModal)}
     </Container>
     )
   );

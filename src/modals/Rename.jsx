@@ -1,17 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect, useRef, useState, useContext,
+} from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { Modal, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { channel } from '../misc/validSchemes.js';
 import { chSelectors } from '../slices/channelsSlice.js';
+import { SocketContext } from '../contexts/SocketAPI.jsx';
 
-const Rename = ({ modal, onHide, socket }) => {
+const Rename = ({ modal, onHide }) => {
   const { t } = useTranslation();
+  const { renameCh } = useContext(SocketContext);
   const inputEl = useRef(null);
   const channels = useSelector(chSelectors.selectAll).map((chan) => chan.name);
   const [valid, setValid] = useState({ fdbk: '', state: false });
   const [onLoad, setOnLoad] = useState(false);
+
   useEffect(() => {
     if (inputEl.current !== null) {
       inputEl.current.select();
@@ -19,26 +24,21 @@ const Rename = ({ modal, onHide, socket }) => {
     }
   }, []);
 
-  const renameChannel = async (id, name) => {
-    setValid({ fdbk: '', state: false });
-    const channelData = { id, name };
-    await socket.emit('renameChannel', channelData, (response) => {
-      if (response.status === 'ok') {
-        onHide({ type: '', show: false });
-      } else {
-        setOnLoad(false);
-        setValid({ fdbk: `${t('networkErr')} ${response.status}`, state: true });
-      }
-    });
-  };
-
   const formik = useFormik({
     initialValues: {
       channelName: modal.data.name,
     },
     validationSchema: channel(channels),
     onSubmit: (values) => {
-      renameChannel(modal.data.id, values.channelName);
+      try {
+        setValid({ fdbk: '', state: false });
+        const channelData = { id: modal.data.id, name: values.channelName };
+        renameCh(channelData);
+        onHide({ type: '', show: false });
+      } catch {
+        setOnLoad(false);
+        setValid({ fdbk: t('networkErr'), state: true });
+      }
     },
   });
 

@@ -8,13 +8,19 @@ import 'regenerator-runtime/runtime.js';
 import '../assets/application.scss';
 import App from './App.jsx';
 import store from './slices/index.js';
+import AuthProvider from './contexts/AuthContext.jsx';
+import SocketProvider from './contexts/SocketAPI.jsx';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-export default () => (
+export default (socket) => (
   <Provider store={store}>
-    <App />
+    <SocketProvider socket={socket}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </SocketProvider>
   </Provider>
 );

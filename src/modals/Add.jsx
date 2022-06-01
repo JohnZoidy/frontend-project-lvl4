@@ -1,35 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect, useRef, useState, useContext,
+} from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { Modal, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { channel } from '../misc/validSchemes.js';
 import { chSelectors } from '../slices/channelsSlice.js';
+import { SocketContext } from '../contexts/SocketAPI.jsx';
 
-const Add = ({ modal, onHide, socket }) => {
+const Add = ({ modal, onHide }) => {
   const { t } = useTranslation();
   const inputEl = useRef(null);
+  const { createCh } = useContext(SocketContext);
   const channels = useSelector(chSelectors.selectAll).map((chan) => chan.name);
   const [valid, setValid] = useState({ fdbk: '', state: false });
   const [onLoad, setOnLoad] = useState(false);
+
   useEffect(() => {
     if (inputEl.current !== null) {
       inputEl.current.focus();
     }
   });
-
-  const addChannel = async (name) => {
-    const channelData = { name };
-    setOnLoad(true);
-    await socket.emit('newChannel', channelData, (response) => {
-      if (response.status === 'ok') {
-        onHide({ type: '', show: false });
-      } else {
-        setOnLoad(false);
-        setValid({ fdbk: `${t('networkErr')} ${response.status}`, state: true });
-      }
-    });
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -37,7 +29,15 @@ const Add = ({ modal, onHide, socket }) => {
     },
     validationSchema: channel(channels),
     onSubmit: (values) => {
-      addChannel(values.channelName).catch((e) => console.log(e));
+      try {
+        const channelData = { name: values.channelName };
+        setOnLoad(true);
+        createCh(channelData);
+        onHide({ type: '', show: false });
+      } catch {
+        setOnLoad(false);
+        setValid({ fdbk: t('networkErr'), state: true });
+      }
     },
   });
 
