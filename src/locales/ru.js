@@ -9,6 +9,7 @@ export default {
         rename: 'Переименовать',
         register: 'Зарегистрироваться',
         delete: 'Удалить',
+        dropdown: 'Управление каналом',
       },
       addModal: {
         placeholder: 'Введите название канала...',

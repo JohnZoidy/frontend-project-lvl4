@@ -17,7 +17,9 @@ export default ({ id, showModal, filter }) => {
           <Dropdown className="mw-100" as={ButtonGroup} key={chan.id}>
             <Nav.Link className="text-truncate" key={chan.id} eventKey={chan.id}>{`# ${filter.clean(chan.name)}`}</Nav.Link>
 
-            <Dropdown.Toggle style={{ flex: 'none' }} split variant="primary" />
+            <Dropdown.Toggle style={{ flex: 'none' }} split variant="primary">
+              <span className="visually-hidden">{t('buttons.dropdown')}</span>
+            </Dropdown.Toggle>
 
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => showModal({ type: 'renaming', show: true, data: { name: chan.name, id: chan.id } })}>{t('buttons.rename')}</Dropdown.Item>
