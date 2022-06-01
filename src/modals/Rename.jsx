@@ -55,7 +55,7 @@ const Rename = ({ modal, onHide }) => {
           <Form.Group className="form-group">
             <Form.Control
               ref={inputEl}
-              data-testid="input-body"
+              id="name"
               isInvalid={formik.errors.channelName || valid.state}
               name="channelName"
               type="text"
@@ -63,6 +63,7 @@ const Rename = ({ modal, onHide }) => {
               value={formik.values.channelName}
               disabled={onLoad}
             />
+            <label htmlFor="name" className="visually-hidden">{t('renameModal.name')}</label>
             <Form.Control.Feedback type="invalid" className="text-start">
               {formik.errors.channelName}
               {valid.fdbk}

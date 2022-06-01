@@ -13,6 +13,7 @@ export default {
       addModal: {
         placeholder: 'Введите название канала...',
         title: 'Добавить новый канал',
+        name: 'Имя канала',
       },
       removeModal: {
         title: 'Удалить канал',
@@ -20,6 +21,7 @@ export default {
       },
       renameModal: {
         title: 'Переименовать канал',
+        name: 'Имя канала',
       },
       regPage: {
         title: 'Регистрация',

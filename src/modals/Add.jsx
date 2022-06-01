@@ -54,7 +54,7 @@ const Add = ({ modal, onHide }) => {
           <Form.Group className="form-group">
             <Form.Control
               ref={inputEl}
-              data-testid="input-body"
+              id="name"
               isInvalid={formik.errors.channelName || valid.state}
               disabled={onLoad}
               name="channelName"
@@ -63,6 +63,7 @@ const Add = ({ modal, onHide }) => {
               onChange={formik.handleChange}
               value={formik.values.channelName}
             />
+            <label htmlFor="name" className="visually-hidden">{t('addModal.name')}</label>
             <Form.Control.Feedback type="invalid" className="text-start">
               {formik.errors.channelName}
               {valid.fdbk}
