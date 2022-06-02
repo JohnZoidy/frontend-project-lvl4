@@ -32,7 +32,7 @@ const SignUpPage = () => {
       changeValidState({ isInvalid: false, feedback: '' });
       localStorage.setItem('userId', JSON.stringify(request.data));
       logIn(username);
-      const { from } = location.state || { from: { pathname: '/' } };
+      const { from } = location.state || { from: { pathname: routes.mainPage() } };
       navigate(from, { replace: true });
     }
   };

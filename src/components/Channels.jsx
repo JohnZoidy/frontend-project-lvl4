@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { chSelectors } from '../slices/channelsSlice.js';
 import { setActive } from '../slices/activeChannelSlice.js';
 
-export default ({ id, showModal, filter }) => {
+const Channels = ({ id, showModal, filter }) => {
   const channels = useSelector(chSelectors.selectAll);
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -43,3 +43,5 @@ export default ({ id, showModal, filter }) => {
 
   );
 };
+
+export default Channels;

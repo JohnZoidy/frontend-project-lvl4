@@ -8,6 +8,7 @@ export default (props) => {
 
   useEffect(() => {
     setCount(msgs.length);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [msgs.length]);
 
   return (

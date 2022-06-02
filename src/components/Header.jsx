@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { chSelectors } from '../slices/channelsSlice.js';
 
-export default (props) => {
+const Header = (props) => {
   const { id, count } = props;
   const { t } = useTranslation();
   const chan = useSelector((state) => chSelectors.selectById(state, id));
@@ -21,3 +21,5 @@ export default (props) => {
     )
   );
 };
+
+export default Header;

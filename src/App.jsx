@@ -15,6 +15,7 @@ import Page404 from './components/Page404.jsx';
 import ChatPage from './components/ChatPage.jsx';
 import SignUpPage from './components/SignUpPage.jsx';
 import { AuthContext } from './contexts/AuthContext.jsx';
+import routes from './routes.js';
 
 const rollbarConfig = {
   accessToken: '9b16bfaa364844b19e877f05709e4b7b',
@@ -28,7 +29,7 @@ const rollbarConfig = {
 const PrivateRoute = ({ user, children }) => {
   const location = useLocation();
   return (
-    user ? children : <Navigate to="/login" state={{ from: location }} />
+    user ? children : <Navigate to={routes.loginPage()} state={{ from: location }} />
   );
 };
 
@@ -42,22 +43,22 @@ const App = () => {
         <div className="d-flex flex-column h-100">
           <Navbar className="shadow-sm" bg="white" expand="lg">
             <Container>
-              <Navbar.Brand href="/">Hexlet Chat</Navbar.Brand>
+              <Navbar.Brand href={routes.mainPage()}>Hexlet Chat</Navbar.Brand>
               {user && <Button variant="outline-success" onClick={logOut}>{t('buttons.logOut')}</Button>}
             </Container>
           </Navbar>
           <Routes>
             <Route
-              path="/"
+              path={routes.mainPage()}
               element={(
                 <PrivateRoute user={user}>
                   <ChatPage username={user} />
                 </PrivateRoute>
               )}
             />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="*" element={<Page404 />} />
+            <Route path={routes.loginPage()} element={<LoginPage />} />
+            <Route path={routes.signupPage()} element={<SignUpPage />} />
+            <Route path={routes.notFoundPage()} element={<Page404 />} />
           </Routes>
         </div>
       </Router>

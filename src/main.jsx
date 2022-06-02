@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-export default (socket) => (
+const Root = (socket) => (
   <Provider store={store}>
     <SocketProvider socket={socket}>
       <AuthProvider>
@@ -24,3 +24,5 @@ export default (socket) => (
     </SocketProvider>
   </Provider>
 );
+
+export default Root;
