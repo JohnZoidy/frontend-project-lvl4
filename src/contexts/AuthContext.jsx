@@ -5,14 +5,18 @@ export const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState('');
-  const logIn = (username) => setUser(username);
+  const logIn = (data) => {
+    setUser(data.username);
+    localStorage.setItem('userId', JSON.stringify(data));
+  };
   const logOut = () => {
     localStorage.removeItem('userId');
     setUser('');
   };
+
   if (user === '' && localStorage.getItem('userId')) {
     const data = JSON.parse(localStorage.getItem('userId'));
-    logIn(data.username);
+    logIn(data);
   }
 
   const getAuthHeader = () => {

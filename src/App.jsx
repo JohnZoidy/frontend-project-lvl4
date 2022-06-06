@@ -6,6 +6,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
+import * as filter from 'leo-profanity';
 import { Navbar, Container, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Provider } from '@rollbar/react';
@@ -18,7 +19,7 @@ import { AuthContext } from './contexts/AuthContext.jsx';
 import routes from './routes.js';
 
 const rollbarConfig = {
-  accessToken: '9b16bfaa364844b19e877f05709e4b7b',
+  accessToken: `${process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN}`,
   captureUncaught: true,
   captureUnhandledRejections: true,
   payload: {
@@ -32,6 +33,7 @@ const PrivateRoute = ({ user, children }) => {
     user ? children : <Navigate to={routes.loginPage()} state={{ from: location }} />
   );
 };
+filter.add(filter.getDictionary('ru'));
 
 const App = () => {
   const { t } = useTranslation();
@@ -52,7 +54,7 @@ const App = () => {
               path={routes.mainPage()}
               element={(
                 <PrivateRoute user={user}>
-                  <ChatPage username={user} />
+                  <ChatPage username={user} filter={filter} />
                 </PrivateRoute>
               )}
             />

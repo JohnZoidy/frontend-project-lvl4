@@ -15,7 +15,6 @@ const Rename = ({ modal, onHide }) => {
   const inputEl = useRef(null);
   const channels = useSelector(chSelectors.selectAll).map((chan) => chan.name);
   const [valid, setValid] = useState({ fdbk: '', state: false });
-  const [onLoad, setOnLoad] = useState(false);
 
   useEffect(() => {
     if (inputEl.current !== null) {
@@ -36,7 +35,7 @@ const Rename = ({ modal, onHide }) => {
         renameCh(channelData);
         onHide({ type: '', show: false });
       } catch {
-        setOnLoad(false);
+        formik.setSubmitting(false);
         setValid({ fdbk: t('networkErr'), state: true });
       }
     },
@@ -61,20 +60,20 @@ const Rename = ({ modal, onHide }) => {
               type="text"
               onChange={formik.handleChange}
               value={formik.values.channelName}
-              disabled={onLoad}
+              disabled={formik.isSubmitting}
             />
             <label htmlFor="name" className="visually-hidden">{t('renameModal.name')}</label>
             <Form.Control.Feedback type="invalid" className="text-start">
-              {formik.errors.channelName}
+              {t(formik.errors.channelName)}
               {valid.fdbk}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end mt-2">
-              <input className="btn btn-primary me-2" type="submit" value={t('buttons.rename')} disabled={formik.errors.channelName || onLoad} />
+              <input className="btn btn-primary me-2" type="submit" value={t('buttons.rename')} disabled={formik.errors.channelName || formik.isSubmitting} />
               <button
                 className="btn btn-secondary"
                 type="button"
                 onClick={() => onHide({ type: '', show: false })}
-                disabled={onLoad}
+                disabled={formik.isSubmitting}
               >
                 {t('buttons.cancel')}
               </button>

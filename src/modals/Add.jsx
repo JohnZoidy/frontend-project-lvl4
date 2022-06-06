@@ -15,7 +15,6 @@ const Add = ({ modal, onHide }) => {
   const { createCh } = useContext(SocketContext);
   const channels = useSelector(chSelectors.selectAll).map((chan) => chan.name);
   const [valid, setValid] = useState({ fdbk: '', state: false });
-  const [onLoad, setOnLoad] = useState(false);
 
   useEffect(() => {
     if (inputEl.current !== null) {
@@ -31,11 +30,11 @@ const Add = ({ modal, onHide }) => {
     onSubmit: (values) => {
       try {
         const channelData = { name: values.channelName };
-        setOnLoad(true);
+        formik.setSubmitting(true);
         createCh(channelData);
         onHide({ type: '', show: false });
       } catch {
-        setOnLoad(false);
+        formik.setSubmitting(false);
         setValid({ fdbk: t('networkErr'), state: true });
       }
     },
@@ -56,7 +55,7 @@ const Add = ({ modal, onHide }) => {
               ref={inputEl}
               id="name"
               isInvalid={formik.errors.channelName || valid.state}
-              disabled={onLoad}
+              disabled={formik.isSubmitting}
               name="channelName"
               type="text"
               placeholder={t('addModal.placeholder')}
@@ -65,16 +64,16 @@ const Add = ({ modal, onHide }) => {
             />
             <label htmlFor="name" className="visually-hidden">{t('addModal.name')}</label>
             <Form.Control.Feedback type="invalid" className="text-start">
-              {formik.errors.channelName}
+              {t(formik.errors.channelName)}
               {valid.fdbk}
             </Form.Control.Feedback>
             <div className="d-flex justify-content-end mt-2">
-              <input className="btn btn-primary me-2" type="submit" value={t('buttons.add')} disabled={formik.errors.channelName || onLoad} />
+              <input className="btn btn-primary me-2" type="submit" value={t('buttons.add')} disabled={formik.errors.channelName || formik.isSubmitting} />
               <button
                 className="btn btn-secondary"
                 type="button"
                 onClick={() => onHide({ type: '', show: false })}
-                disabled={onLoad}
+                disabled={formik.isSubmitting}
               >
                 {t('buttons.cancel')}
               </button>

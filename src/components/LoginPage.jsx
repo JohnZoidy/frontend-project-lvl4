@@ -31,10 +31,9 @@ const LoginPage = () => {
       changeValidState({ isInvalid: true, feedback: t('valid.incorrect') });
     } else {
       changeValidState({ isInvalid: false, feedback: '' });
-      localStorage.setItem('userId', JSON.stringify(request.data));
       const { from } = location.state || { from: { pathname: routes.mainPage() } };
       navigate(from, { replace: true });
-      logIn(username);
+      logIn(request.data);
     }
   };
 
@@ -74,7 +73,7 @@ const LoginPage = () => {
                       value={formik.values.username}
                     />
                     <Form.Control.Feedback type="invalid" className="text-start" tooltip>
-                      {formik.errors.username}
+                      {t(formik.errors.username)}
                     </Form.Control.Feedback>
                   </FloatingLabel>
                 </Form.Group>
@@ -88,10 +87,10 @@ const LoginPage = () => {
                       required
                       type="password"
                       onChange={formik.handleChange}
-                      value={formik.values.password}
+                      value={t(formik.values.password)}
                     />
                     <Form.Control.Feedback type="invalid" className="text-start" tooltip>
-                      {validState.isInvalid ? validState.feedback : formik.errors.password}
+                      {validState.isInvalid ? validState.feedback : t(formik.errors.password)}
                     </Form.Control.Feedback>
                   </FloatingLabel>
                 </Form.Group>

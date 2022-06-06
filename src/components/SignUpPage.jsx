@@ -74,7 +74,7 @@ const SignUpPage = () => {
                       value={formik.values.username}
                     />
                     <Form.Control.Feedback type="invalid" className="text-start" tooltip>
-                      {formik.errors.username}
+                      {t(formik.errors.username)}
                     </Form.Control.Feedback>
                   </FloatingLabel>
                 </Form.Group>
@@ -91,7 +91,7 @@ const SignUpPage = () => {
                       value={formik.values.password}
                     />
                     <Form.Control.Feedback type="invalid" className="text-start" tooltip>
-                      {validState.isInvalid ? validState.feedback : formik.errors.password}
+                      {validState.isInvalid ? validState.feedback : t(formik.errors.password)}
                     </Form.Control.Feedback>
                   </FloatingLabel>
                 </Form.Group>
@@ -108,7 +108,7 @@ const SignUpPage = () => {
                       value={formik.values.confirm}
                     />
                     <Form.Control.Feedback type="invalid" className="text-start" tooltip>
-                      {validState.isInvalid ? validState.feedback : formik.errors.confirm}
+                      {validState.isInvalid ? validState.feedback : t(formik.errors.confirm)}
                     </Form.Control.Feedback>
                   </FloatingLabel>
                 </Form.Group>

@@ -10,7 +10,7 @@ import { useFormik } from 'formik';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import * as filter from 'leo-profanity';
+
 import { addChannels } from '../slices/channelsSlice.js';
 import { setMessages } from '../slices/messagesSlice.js';
 import { setActive } from '../slices/activeChannelSlice.js';
@@ -31,7 +31,7 @@ const renderModal = (modal, showModal) => {
   return <Component modal={modal} onHide={showModal} />;
 };
 
-const ChatPage = ({ username }) => {
+const ChatPage = ({ username, filter }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const inputField = useRef();
@@ -55,13 +55,12 @@ const ChatPage = ({ username }) => {
       };
       createMessage(messageData);
       inputForm.current.removeAttribute('disabled');
-      formik.setFieldValue('messageText', '', false);
+      formik.resetForm();
       inputField.current.focus();
     },
   });
 
   useEffect(() => {
-    filter.add(filter.getDictionary('ru'));
     const fetchContent = async () => {
       const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() })
         .catch((e) => {
