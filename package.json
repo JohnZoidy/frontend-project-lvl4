@@ -7,7 +7,6 @@
   "scripts": {
     "test": "jest",
     "prebuild": "rm -rf dist",
-    "preinstall": "npx npm-force-resolutions",
     "build": "webpack",
     "start": "fastify start server/plugin.js -l info -P -a 0.0.0.0"
   },
@@ -20,9 +19,6 @@
   },
   "engines": {
     "node": "16.x"
-  },
-  "resolutions": {
-    "@rollbar/react": "0.11.0"
   },
   "author": "JohnZoidy&Hexlet",
   "license": "ISC",
